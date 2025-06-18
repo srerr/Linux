@@ -1,0 +1,83 @@
+#crontab:
+---------
+->Linux cron utility is an effective way to schedule a routine background job at a specific time and/or day on an on-going basis.
+->Linux crontab format
+	#MIN HOUR DOM MON DOW CMD
+	
+	->MIN-->minute field 0-59
+	->HOUR-->hour field  0-23
+	->DOM-->day of month 1-31
+	->MON-->month field  1-12
+	->DOW-->Day of week  0-6
+	->CMD-->command      any command to be executed
+->crontab -l or crontab -u {user-name} -l
+->crontab -e // edit crontab
+->crontab -r // remove the crontab 
+->crond //crontab daemon/service that manages scheduling
+->systemctl status crond
+->at HH:MM PM/AM  //at command syntax to run a job at once 
+->atq //list 
+->atrm # // to remove at entry 
+->atd //at daemon/service 
+->at 2:45 AM 101621	//schedule a job to run on oct 16th, 2021 at 2:45am
+->at 4PM+4days  	//schedule a job at 4pm four days from now`
+->at now + 5 hours 	//schedule a job to run five hours from now
+->at 8:00 AM sun 	//schedule a job 8am on coming sunday
+->at 10:00 AM next month //schedule a job 10am next month
+
+#vi editor {Most common keys}:
+------------------------------
+->i -insert
+->Esc -escape out of any mode
+->r -replace
+->d -delete
+->:q! -quit without saving
+->:wq! -quit and sabve
+
+#sed command:
+-------------
+->replace a string in a file with a newstring
+->find and delete a line
+->remove empty lines
+->remove the first or n lines in a file
+->to replace tabs with spaces
+->show defines lines from a file
+->substitute within vi editor
+->and much more......
+
+->sed -i 's/Kenny/lenny/g' file.txt //to substitute Kenny with lenny in a file.txt at global level -i to insert directly into file
+->sed 's/Kenny//g' file.txt  // to remove the word
+->sed '/name/d' file.txt // to delete the line that contains name
+->sed '/^$/d' file.txt  //to remove the empty lines in a file
+->sed '1,2d' file.txt //to delete the 1st and 2nd line
+->sed 's/\t/ /g' file.txt 	//to replace tab with space
+->ed G file.txt //add space btw lines
+
+
+#User account Management:
+-------------------------
+commands:
+->useradd
+->groupadd
+->userdel  //use -r for delete home directory as well 
+->groupdel
+->usermod
+
+#files:
+-------
+->/etc/passwd
+->/etc/group
+->/etc/shadow
+
+#example:
+---------
+->useradd -g {group-name} -s {shell ex:/bin/bash} -c "user description" -m -d {home directory ex:/home/{username}} {username}
+->usermod -G {existing group} {user name to add}  // to add user into the another group
+->chgrp -R {group name} {user name to add in group}
+->passwd {username} //to set password for new user
+
+
+
+
+
+

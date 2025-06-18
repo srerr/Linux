@@ -1,0 +1,263 @@
+*linux basic commands:
+======================
+-->pwd			//"print working directory",shows the directory you are currently in
+-->cd			//"change directory",used to move between directories
+-->ls			//"list",list files and directories
+-->less			//less is very efficient while viewing huge log files,as it doesn't need to load the full file while opening
+-->date
+-->man			//manual
+-->cp [from] [to]	//used to copy files and directories
+-->file			//used to determine a file's "type"
+-->mkdir		//"make directory",used to create new directories 
+-->touch		//used to create empty file and change the timestamp of the file
+-->more			//used to control the display of output,lets you page through the results 
+-->cat > [file name]	//used to create the file 
+-->mv [from][to]	//"move",used to move files and directories 
+-->cat			//"concatenate",used to display files,or concatenate files 
+-->rm			//"remove",used to remove files and directories 
+-->rmdir		//used to remove the empty directory 
+-->wc			//"word count",used to count characters,words,and lines in text files and/or standard input cat [fn]|wc -lcw
+-->dd		//"dd" command is used to convert and copy a file.this post describes "dd" command used in linux along with usage examples and/or output.
+			//ex:dd if=<source file name> of=<destination> [options]
+-->ln			//soft link & hard link
+-->tail			// ex:tail -n [file name]
+-->head			//ex:head -n [file name]
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*permissions in linux:
+======================
+-->chmod		//changing file mode two modes they are symbolic(rwx),Absolut(421)
+-->chown		//change ownership of a file ex:chown  user:gropu [file or directory] stickybit-1
+-->setuid		//
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*User administration:
+=====================
+-->managing users and groups in mainly 4 files they are
+	1)/etc/passwd
+	2)/etc/shadow
+	3)/etc/group
+	4)/etc/gshadow
+-->useradd [user-name]		//create new user
+-->passwd [user-name]		//set password to new user
+-->groupadd [groupname]		//create new group
+-->useradd -g [group name] -c "comment" -u [uniq user id >1000] -s "shell" -d [directory] [user-name]		//add user to group
+-->passwd -l [user-name]	//lock account
+-->passwd -u [user-name]	//unlock account 
+-->usermod -L [user-name]	//lock account
+-->usermod -U [user-name]	//unlock account
+-->usermod -l [change-name] [user-name]		//modify the user name
+-->chage --list [user-name]	//gives information about user password 
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*controlling access to files with ACL's:
+ ======================================
+--> getfacl [file or directory name]		//gives the status of file
+-->setfacl u:[user]:[permissions] [file-name]	//set the acl permissions
+-->setfacl -m mask:[permissions] [file-name]	//change the limit permissions
+-->setfacl -d -m u:[user nAme]:[permissions] [directory]	//set default permissions
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*visudo:
+ =====
+-->
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+*bash profile,variables & standard I/O redirections:
+ ==================================================
+-->below are the various initialization file for bash shell for users:
+	1)/etc/profile 		-->managed by administrator
+	2)~/.bash_profile 	-->it is configuration file to configure the user environment
+	3)~/.bash_rc		-->it is a shell script which runs every time a user openes new shell
+	4)~/.bash_logout	-->it contains instructions for logout
+ 
+-->bash variables are three types they are:
+	1)bash variables are local to a single shell by default set with 'VARIABLE=VALUE'
+	2)environment variables are inherited by child shells set with 'export VARIABLE=VALUE'
+		//accessed by some programs for configuration
+	3)system variables 
+		//created and maintained by linux bash shell itself 
+-->set 		// used to see the system and environment variables 
+-->env |less	//it gives the environment variables
+
+-->standard I/O redirections
+-->supported operators include:
+	1)> 	-->redirect STDOUT to file
+	2)2>	-->redirect STDERR to file
+	3)&> 	-->redirect all OUTPUT to file
+	4)>>	-->file contents are overwritten by default 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*linux crontab:
+ ==============
+-->linux cron utility is an effective way to schedule a routine background job at a specific time and/or day on an on-going basis
+-->linux crontab format
+	--------------------------------------------
+	|MIN	HOUR	DOM	MON	DOW	CMD |
+	 -------------------------------------------
+-->EXPLANATION TERMS:
+	FIELD		DESCRIPTION 		ALLOWED VALUE
+	MIN		minute field 		0 to 59
+	HOUR		hour field 		0 to 23
+	DOM		day of month		1-31
+	MON		month field		1-12
+	DOW		day of week		0-6
+	CMD		command			any command to be executed
+--> crontab -l 		//to see the crontab entries 
+-->crontab -e		//used to create the jobs 
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*OpenSSH & telnet:[ssh:22][telnet:23]
+ ================
+
+-->open ssh features
+	1)secure communication
+	2)strong encryption (3DES,blowfish,AES,Arcfour)
+	3)port forwarding(encrypted channels for legacy protocols)
+	4)strong authentication(public key,one-time password and kerberos authentication)
+	5)agent forwarding (single sign on)
+	6)interoperability (compliance with ssh 1.3,1.5 and 2.0 protocol standards)
+	7)SFTP client and server support in both SSH1 and SSH2 protocols
+	8)kerberos and AFS ticket passing
+	9)data compression
+-->OpenSSH options are controlled through the /etc/ssh/sshd_config file
+-->we can do some operation by changing the configuration file
+	1)disable root login
+		//PermitRootLogin no
+	2)allow specific users and groups
+		//AllowUsers user_name1 user_name2 ...
+		//AllowGroups group1 group2 ...
+-->deny specific users or groups
+		//DenyUsers user1 user2 ...
+		//DenyGroups group1 group2 ...
+-->change SSHD port number
+		//Port 2222
+-->change login grace time
+		//LoginGraceTime 1m
+-->restrict the interface(ip address) to login (listen address)
+ 		//ListenAddress [ip] 
+-->disconnect SSH when no activity
+	//ClientAliveInterval [in seconds]
+	//ClientAliveCountMax [in seconds]
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*process management:
+ ==================
+-->Process:set of instructions loaded in a memory
+	1)ps report a snapshot of the current processes
+	2)ps -a all terminals
+	3)ps -e list of all the processes
+	4)ps -o(customer properties)
+	5)ps -ao tty,comm,pid,%mem,%cpu
+	6)ps aux
+	7)ps -ef
+	8ps lax
+-->starting a process 
+-->when you start a process(run a command)there are two ways you can run it
+	1)Foreground processes
+	2)background processes
+*foreground processes:
+	-->by default, every process that you start runs in the foreground.it gets its input from the keyboard and sends its output to the screen
+-->process states:
+	->process stat codes:STAT or 'S' display to describe the stat of a process
+	1)D--uninterruptable sleep(usually IO)
+	2)R--this is a stat where a process is either in running or ready to run
+	3)S--interruptible sleep(waiting for an event to complete)
+	4)T--stopped, once the process is completed,this stat occurs. this process can be restarted
+	5)Z--defunct(zombie):in this stat,the process will be terminated and the information will still be available in the process table.
+	6)W--paging
+-->fg=foreground
+-->bg=background
+-->fg %[n-job number]
+-->shows all the jobs
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*RPM(red hat package manager):[/var/lib/rpm]
+ ============================
+-->this is an default open source and most popular package management utility for redhat based systems like(RHEL,cent os,fedora)
+-->the tool allows system administrators and users to install,update,uninstall,query,verify and manage system software packages in unix/linux operating systems 
+-->there are five basic modes for RPM command
+	1)install->it is used to install any RPM package
+	2)remove->it is used to erase,remove or un-install any RPM package
+	3)upgrade->it is used to update the existing RPM package
+	4)verify->it is used to query about different RPM packages
+	5)query->it is used for the verification of any RPM package
+-->how to install an rpm package
+	ex:rpm -ivh [package-name]
+	i->install a package
+	v->verbose for a nicer display
+	h->print hash marks as the package archive is unpacked.
+-->how to check an rpm signature package
+	ex:rpm --checksig [package-name]
+-->how to check dependencies of rpm package before installing
+	ex:rpm -qpR [package-name]
+	where:  q->query a package
+	       	p->list capabilities this package provides
+		R->list capabilities on which this package depends 
+		U->upgrade
+		a->all
+		e->erase
+		qf->query file
+		qi->query information
+		qip->query info package
+		qdf->duery document file
+		Vp->verify package 
+		Va->verify all
+-->how to install a rpm package without dependencies
+	ex:rpm -ivh --nodeps [package-name]
+-->how to check an installed rpm package
+	ex:rpm -q [package-name] 
+-->how to list all files of an installed rpm package
+	ex:rpm -ql [package-name]
+-->how to list recently installed rpm packages
+	ex:rpm -qa --last
+-->how to list all installed rpm packages
+	ex:rpm -qa
+-->how to upgrade a rpm package
+	ex:rpm -Uvh [package-name]
+-->how to remove a rpm package
+	ex:rpm -e [package-name]
+-->how to remove an rpm package without dependencies
+	ex:rpm -ev --nodeps [package-name]
+-->how to query a file that belongs which rpm package
+	ex:rpm -qf [file-location]
+-->how to query a information of installed rpm package
+	ex:rpm -qi [package-name]
+-->get the information of rpm package before installing
+	ex:rpm -qip [package-name]
+-->how to get query documentation of installed package
+	ex:rpm -qdf [package-name]
+-->how to verify a rpm package
+	ex:rpm -Vp [package-name]
+-->how to verify all rpm packages
+	ex:rpm -Va
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*YUM configuration:[Yellowdog Updater,Modified]
+ =================
+-->configure and install yum server in linux
+	step1:- install required packages[yum,yum-untils,vsftpd,createrepo]
+	step2:- configure the vsftpd server[/etc/vsftpd.conf]
+	step3:- configure the yum repository from server side
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*systemd:[/usr/lib/systemd/system,/etc/systemd/systems]
+=========
+-->the systemd system and service manager is responsible for controlling how services are started,stopped and otherwise managed on rhel7 systems.by offering on-demand service start-up and better transactional dependency controls,systemd dramatically reduces start up times.
+-->although the systemd process replaces the init process(quite literally, /sbin/init is now a symbolic link to /usr/lib/systemd/systemd) for starting services at boot time and changing runlevels,systemd provides much more control than the init process does while still supporting existing init scripts
+-->systemctl list-dependencies [service-name]		//list the dependencies required to start the process
+-->systemctl list-units --type [type of unit]		//list the units associated services
+-->systemctl list-unit-files		//list the all units
+-->systemctl --version			//give current version of systemd
+-->systemd-analyze		//shows boot time
+-->systemd-analyze blame	//show time for each process
+-->systemd-analyze critical-chain
+-->journalctl
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+*managing server firewalls:
+ =========================
+-->the linux kernel includes netfilter,a framework for network trafic oerations such as packet filtering,network address translation and port translation
+-->netfilter is the primary component in redhat enterprise linux 8 firewalls.
+-->A packet filtering firewall reads incoming network packets and filters(allows or denies) each data packet based on the header information in the packet. the linux kernel has built-in packet filtering functionality called netfilter.

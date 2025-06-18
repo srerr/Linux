@@ -1,0 +1,168 @@
+##Disk management and run levels:
+---------------------------------
+
+#system run levels:
+-------------------
+
+Main Run level:
+---------------
+->0 Shut down(or halt) the system
+->1 Single-user mode; usually aliased as s or S
+->6 Reboot the system
+
+Other Run levels:
+-----------------
+->2 Multiuser mode without networking
+->3 Multiuser mode with networking   
+->5 Multiuser mode with networking and GUI.
+->4 is undefined or not used/user definable
+
+#who -r  //to know the current running run level 
+
+#Storage & Disk partition:
+--------------------------
+->commands for disk partitions
+	#df -h   // gives information about disk in human readable format 
+	#fdisk 
+#adding disk and creating partitions:
+-------------------------------------
+->fdisk {disk-location} 	// ex: fdisk /dev/sda  used for creating partition from disk.
+->mkfs.xfs {partition name}	// ex mkfs.xfs /dev/sda1 to create file system on the partition 
+->mount {partition location} {mount path}	//ex: mount /dev/sdb1 /data 
+->vi /etc/fstab			//in that file add your partition details ex: /dev/sdb1		/data 		xfs 	0 	0  
+
+#Logical Volume Management[LVM]:
+--------------------------------
+->install Linux with LVM configuration
+->echo "- - -" > /sys/class/scsi_host/host1/scan	// to scan for new disks 
+->add disk and create LVM partition
+		
+		Hard Disks [add hard disk]
+		    |
+		Partitions [for creating partitions use fdisk {disk/location} ex: fdisk /dev/sdc note: make sure system type should be LINUX LVM (8e)]
+		    |
+		Physical Volume [use pvcreate {partition name} ex: pvcreate /dev/sdc1 // pvdisplay for details of physical volume ]
+		    |
+	       Volume Group[vgcreate {new volume group name} {physical volume}ex:vgcreate oracle_vg /dev/sdc1 //vgdisplay {vgname}for creating volume group]
+		    |
+		Logical Volume(s) [lvcreate -n {new logical volume} --size {1000M/1G} {volume group name} ex:lvcreate -n oraclr_lv --size 1000M oracle_vg]
+		    |
+		File System  [create file system mkfs.xfs {lv_location} ex: mkfs.xfs /dev/oracle_vg/oracle_lv]
+->mount the lv to directory mount {lv_location} {directory} ex: mount /dev/oracle_vg/oracle_lv /oracle  
+
+#extend disk using LVM:
+-----------------------
+->fdisk -l  //for listing disks 
+->fdisk {disk location/name} 	//to create partition
+->pvdisplay //for listing physical volumes
+->pvs
+->vgdisplay //to list volume group information
+->pvcreate /dev/sdd1	//to create physical volume.
+->vgextend {volume_group} {physical_volume}  ex: vgextend oracle_vg /dev/sdd1
+->lvextend -L+{sizeM/G} {lv_name} 	//ex:lvextend -L+200M /dev/mapper/oracle_vg-oracle_lv  for extending lv 
+->xfs_growfs {lv}	// ex: xfs_growfs   /ev/mapper/oracle_vg-oracle_lv  to extend file system or use below command 
+->resize2fs {filesystem name} 
+->lvcreate -L 300M -i3 -I128 -n striplv /dev/vgtest 	//to create stripe lv
+->lvcreate -L 200M -m1 mirrorlv /dev/vgtest	//to create mirrored lv
+->vgreduce /dev/vgtest /dev/sde1  # to remove disk from volume group 
+->vgremove /dev/vgtest
+->vgchange -a n /dev/vgtest 	//to deactivate the lv	
+
+#adding swap space:
+-------------------
+->free -m
+->dd if=/dev/zero of=/newswap bs=1M count=1024
+->chmod go-r newswap or chmod 600 newswap
+->mkswap /newswap
+->swapon /newswap
+->vi /etc/fstab			#add /newswap swap swap 0 0
+->swapoff /newswap  #to delete swap
+
+#xfs_info command:
+------------------
+->df -T  	//to now about the type of file system was used in partitions 
+
+#implementation of advanced stoage features using stratis:
+----------------------------------------------------------
+->install stratis package
+	yum/dnf install stratis-cli stratisd
+->enable and start service 
+	systemctl enable|start stratisd
+->add 2X5G new disks from virtualization software and verify at the OS level 
+	lsblk
+->Create a new stratis pool and verify
+	stratis pool create pooll /dev/sdb
+	stratis pool list
+->extend the pool 
+	stratis pool add-data pooll /dev/sdc
+	stratis pool list  
+->Create a new file system using stratis 
+	stratis filesystem create pool1 fs1
+	stratis filesystem list
+->Create a directory for mount point and mount filesystem
+	mkdir /bigdata
+	mount /dev/stratis/pool1/fs1 /bigdata
+	lsblk
+->Create a snapshot of your filesystem
+	stratis filesystem snapshot pool1 fs1 fs1-snap
+	stratis filesystem list
+->add the entry to /etc/fstab to mount at boot
+	UUID="" /bigdata xfs defaults, x-system.requires=stratisd.service 0 0
+
+#RAID (Redundant Array of Independent Disks):
+--------------------------------------------
+#File System Check(fsck and xfs_repair):
+----------------------------------------
+->fsck //for ext type filesystems
+->xfs_repair 	//for xfs
+
+#System Backup(dd Command):
+--------------------------
+->To backup or clone an entire hard disk to another hard disk connected to the same system, execute the dd command as shown
+
+	#dd if=<source file name> of =<target file name> [options]
+	#dd if=/dev/sda of=/dev/sdb
+->To backup/copy the disk partition
+	#dd if=/dev/sda1 of=/root/sda1.img
+->restoring this image file to other machine after copying the .img
+	#dd if=/root/sda1.img of=/dev/sdb3
+
+#Network File System(NFS):
+--------------------------
+
+#from server side configuration:
+--------------------------------
+->install NFS packages
+	#yum install nfs-utils libnfsidmap
+->Once the package are installed, enable and start NFS services
+	#systemctl enable rpcbind
+	#systemctl enable nfs-server
+	#systemctl start rpcbind,nfs-server,rpc-statd,nfs-idmapd
+->Create NFS share directory and assign permissions
+	#mkdir /myshare
+	#chmod a+rwx /myshare
+->Modify /etc/exports file to add shared filesystem
+	#/myshare 192.168.12.7 (rw,sync,no_root_squash) = for only 1 host
+	#/myshare *(rw,sync,no_root_squash) = for everyone
+->export the NFS filesystem
+	#exportfs -rv
+	
+
+#client side configuration:
+---------------------------
+->install NFS packages
+	#yum install nfs-utils rpcbind
+->once the packages are installed enable and start rpcbind service
+	#service rpcbind start 
+->Make sure firewalld or iptables stopped(if running)
+	#ps -ef | egrep "firewall|iptable"
+->show mount from the NFS server
+	#showmount -e 192.168.1.5 (NFS SERVER IP)
+->create a mount point 
+	#mkdir /mnt/app
+->mount the NFS filesystem
+	#mount 192.168.1.5:/myshare /mnt/app
+->verify mounted filesystem 
+	#df -h
+->to unmount 
+	#umount /mnt/app
