@@ -1,0 +1,730 @@
+#Network files and Commands:
+----------------------------
+->interface Detection 
+->Assigning an IP address
+->Interface Configuration files in linux
+    1) /etc/nsswitch.conf
+    2) /etc/resolv.conf
+    3) /etc/hostname
+    4) /etc/hosts
+    5) /etc/sysconfig/network-scripts/ifcfg-eth0
+    6) /etc/sysconfig/network
+
+#Network Commands:
+-------------------
+    1) About netstat command:
+    The `netstat` (network statistics) command is used to display network connections, routing tables, interface statistics, masquerade connections, and multicast memberships. It is a useful tool for network troubleshooting and performance measurement.
+
+    ->Syntax:
+        netstat [options]
+
+    ->Common Options:
+        -a      : Show both listening and non-listening sockets.
+        -t      : Display TCP connections.
+        -u      : Display UDP connections.
+        -l      : Show only listening sockets.
+        -n      : Show numerical addresses instead of resolving hosts.
+        -p      : Show the PID and name of the program to which each socket belongs.
+        -r      : Display the kernel routing tables.
+        -i      : Display a table of all network interfaces.
+        -s      : Display summary statistics for each protocol.
+        -g      : Display multicast group membership information.
+        -c      : Continuously display the selected information every second.
+        -e      : Display extended information.
+        -o      : Show timers.
+
+    ->Examples:
+        1) Show all active connections and listening ports:
+            netstat -a
+
+        2) Show only TCP connections:
+            netstat -t
+
+        3) Show only UDP connections:
+            netstat -u
+
+        4) Show listening ports with numeric addresses:
+            netstat -ltn
+
+        5) Show routing table:
+            netstat -r
+
+        6) Show network interface statistics:
+            netstat -i
+
+        7) Show process using each socket:
+            netstat -p
+
+        8) Show protocol statistics:
+            netstat -s
+
+        9) Continuously display connections every second:
+            netstat -c
+        10) Show multicast group memberships:
+            netstat -g
+        11) Show extended information:
+            netstat -e
+        12) Show timers:
+            netstat -o
+        13) Show all connections with process information:
+            netstat -tup
+        14) Show all listening sockets with process information:
+            netstat -lptn
+        15) Show all connections with numeric addresses and process information:
+            netstat -tunp
+        16) Show all connections with extended information:
+            netstat -tune
+        17) Show all connections with multicast group information:
+            netstat -tug
+        18) Show all connections with routing information:
+            netstat -ture
+        19) Show all connections with interface statistics:
+            netstat -tui
+        20) Show all connections with summary statistics:
+            netstat -tus
+        21) Show all connections with continuous updates:
+            netstat -tuc
+        22) Show all connections with timers:
+            netstat -tuo
+    Note: ->The `netstat` command may require superuser privileges to display all information, so you might need to prepend `sudo` to the command, like `sudo netstat -tup`.
+          ->On some modern Linux distributions, `netstat` is deprecated and replaced by the `ss` command.
+    
+    2) About ifconfig command:
+    The `ifconfig` command is used to configure network interfaces in Unix-like operating systems. It allows you to view and change the configuration of network interfaces, such as assigning IP addresses, enabling or disabling interfaces, and displaying interface statistics.
+    ->Syntax:
+        ifconfig [interface] [options]
+    ->Common Options:
+        interface : The name of the network interface (e.g., eth0, wlan0).
+        up       : Activate the specified interface.
+        down     : Deactivate the specified interface.
+        inet addr : Assign an IP address to the interface.
+        netmask  : Set the subnet mask for the interface.
+        broadcast : Set the broadcast address for the interface.
+        hw ether : Set the hardware (MAC) address for the interface.
+        mtu      : Set the Maximum Transmission Unit (MTU) size for the interface.
+        -a       : Display all interfaces, including those that are down.
+    ->Examples:
+        1) Display all network interfaces and their configurations:
+            ifconfig -a
+        2) Display a specific network interface (e.g., eth0):
+            ifconfig eth0   
+        3) Assign an IP address and subnet mask to an interface (e.g., eth0):
+            ifconfig eth0
+            ifconfig eth0 inet addr <IP_ADDRESS> netmask <NETMASK> broadcast <BROADCAST_ADDRESS>        
+        4) Activate a network interface (e.g., eth0):
+            ifconfig eth0 up
+        5) Deactivate a network interface (e.g., eth0):
+            ifconfig eth0 down
+        6) Set the hardware (MAC) address for an interface (e.g., eth0):
+            ifconfig eth0 hw ether <MAC_ADDRESS>
+        7) Set the Maximum Transmission Unit (MTU) size for an interface (e.g., eth0):
+            ifconfig eth0 mtu <MTU_SIZE>
+        8) Display statistics for a specific interface (e.g., eth0):
+            ifconfig eth0
+        9) Display the IP address of a specific interface (e.g., eth0):
+            ifconfig eth0 | grep 'inet addr'
+        10) Display the MAC address of a specific interface (e.g., eth0):
+            ifconfig eth0 | grep 'ether'
+        11) Display the status of all interfaces:
+            ifconfig -s
+        12) Display the status of a specific interface (e.g., eth0):
+            ifconfig eth0 -s
+        13) Display the interface configuration in a more human-readable format:
+            ifconfig eth0 | sed 's/^\(.*\):/\1/' | column -t    
+        14) Display the interface configuration with additional details:
+            ifconfig eth0 | sed 's/^\(.*\):/\1/' | column -t | less     
+        15) Display the interface configuration with a specific output format:
+            ifconfig eth0 | awk '/inet / {print $2, $4, $5}' | column -t
+        16) Display the interface configuration with a specific output format and filter:
+            ifconfig eth0 | awk '/inet / {print $2, $4, $5}' | grep -v 'inet6' | column -t
+        17) Display the interface configuration with a specific output format and sort:
+            ifconfig eth0 | awk '/inet / {print $2, $4, $5}' | sort | column -t     
+        18) Display the interface configuration with a specific output format and count:
+            ifconfig eth0 | awk '/inet / {print $2, $4, $5}' | wc -l | column -t
+        19) Display the interface configuration with a specific output format and count unique entries:
+            ifconfig eth0 | awk '/inet / {print $2, $4, $5}' | sort | uniq | wc -l | column -t  
+        20) Display the interface configuration with a specific output format and count unique entries with details:
+            ifconfig eth0 | awk '/inet / {print $2, $4, $5}' | sort | uniq -c | column -t
+    Note: ->The `ifconfig` command is deprecated in many modern Linux distributions and has been replaced by the `ip` command. The `ip` command provides more features and flexibility for managing network interfaces.
+          ->For example, you can use `ip addr show` to display interface configurations, `ip link set eth0 up` to activate an interface, and `ip addr add <IP_ADDRESS>/<PREFIX> dev eth0` to assign an IP address.    
+    3) About ip command:
+        The `ip` command is a powerful tool for managing network interfaces, routing, and tunnels in Linux. It is part of the `iproute2` package and provides a more modern and flexible approach compared to older tools like `ifconfig` and `route`.
+        Some common usages of the `ip` command include:
+        - Displaying network interface information:
+            ip addr show
+        - Activating or deactivating an interface:
+            ip link set eth0 up
+            ip link set eth0 down
+        - Assigning an IP address to an interface:
+            ip addr add <IP_ADDRESS>/<PREFIX> dev eth0
+        - Deleting an IP address from an interface:
+            ip addr del <IP_ADDRESS>/<PREFIX> dev eth0
+        - Displaying routing table information:
+            ip route show
+        - Adding a static route:
+            ip route add <DESTINATION> via <GATEWAY>
+        - Deleting a static route:
+            ip route del <DESTINATION> via <GATEWAY>
+        The `ip` command has a more consistent syntax and provides additional features, making it the preferred choice for network configuration in modern Linux systems.   
+    4) About ping command:
+    The `ping` command is a network utility used to test the reachability of a host and measure the round-trip time for messages sent from the originating host to a destination computer. It operates by sending Internet Control Message Protocol (ICMP) Echo Request messages to the destination and waiting for Echo Reply messages. The `ping` command is commonly used for network troubleshooting and diagnostics.   
+    ->Syntax:
+        ping [options] <destination> 
+    ->Common Options:
+        -c <count> : Stop after sending <count> ECHO_REQUEST packets.
+        -i <interval> : Wait <interval> seconds between sending each packet.
+        -t <ttl> : Set the Time To Live (TTL) for the packets.
+        -s <size> : Specify the number of data bytes to be sent.
+        -W <timeout> : Set the timeout for waiting for a reply.
+        -D : Print timestamps before each line of output.
+        -q : Quiet output, only showing summary statistics. 
+        -v : Verbose output, showing more details about the packets.
+        -4 : Use IPv4 only.
+        -6 : Use IPv6 only.
+    ->Examples: 
+        1) Ping a host to check its reachability:
+            ping example.com
+        2) Ping a host with a specific number of packets:
+            ping -c 4 example.com
+        3) Ping a host with a specific interval between packets:
+            ping -i 2 example.com
+        4) Ping a host with a specific packet size:
+            ping -s 64 example.com
+        5) Ping a host with a specific Time To Live (TTL):
+            ping -t 64 example.com
+        6) Ping a host and print timestamps before each line of output:
+            ping -D example.com
+        7) Ping a host quietly, showing only summary statistics:
+            ping -q example.com
+        8) Ping a host with verbose output:
+            ping -v example.com
+        9) Ping a host using IPv4 only:
+            ping -4 example.com
+        10) Ping a host using IPv6 only:
+            ping -6 example.com
+        11) Ping a host with a specific timeout for waiting for a reply:
+            ping -W 5 example.com   
+        12) Ping a host with a specific number of packets and a specific interval:
+            ping -c 10 -i 1 example.com 
+        13) Ping a host with a specific packet size and a specific Time To Live (TTL):
+            ping -s 128 -t 64 example.com
+        14) Ping a host with a specific timeout and quiet output:
+            ping -W 2 -q example.com
+        15) Ping a host with verbose output and a specific number of packets:
+            ping -c 5 -v example.com
+        16) Ping a host with a specific packet size and verbose output:
+            ping -s 256 -v example.com
+        17) Ping a host with a specific Time To Live (TTL) and quiet output:
+            ping -t 128 -q example.com
+        18) Ping a host with a specific interval and verbose output:
+            ping -i 0.5 -v example.com  
+        19) Ping a host with a specific packet size and a specific number of packets:
+            ping -s 512 -c 3 example.com    
+        20) Ping a host with a specific Time To Live (TTL) and a specific number of packets:
+            ping -t 128 -c 2 example.com
+    Note: ->The `ping` command is a fundamental tool for network diagnostics and is available on most operating systems, including Linux, Windows, and macOS.
+          ->It is often used to check if a host is reachable, measure network latency, and diagnose network issues. However, some hosts may block ICMP Echo Requests, so a successful ping does not always guarantee that the host is reachable for other types of traffic.     
+    5) About traceroute command:
+    The `traceroute` command is a network diagnostic tool used to trace the path that packets take from the source host to a destination host across an IP network. It works by sending a series of Internet Control Message Protocol (ICMP) Echo Request packets with incrementing Time To Live (TTL) values, allowing it to discover each hop along the route to the destination.
+    ->Syntax:
+        traceroute [options] <destination>
+    ->Common Options:
+        -n : Show numerical addresses instead of resolving hostnames.
+        -m <max_ttl> : Set the maximum Time To Live (TTL) for the packets.
+        -p <port> : Set the destination port for UDP packets (default is 33434).
+        -w <timeout> : Set the timeout for waiting for a reply.
+        -q <queries> : Set the number of queries per hop (default is 3).
+        -I : Use ICMP Echo Request packets instead of UDP packets.
+        -T : Use TCP SYN packets instead of UDP packets.
+        -4 : Use IPv4 only.
+        -6 : Use IPv6 only. 
+    ->Examples:
+        1) Trace the route to a host (e.g., example.com):
+            traceroute example.com      
+        2) Trace the route to a host with numerical addresses:
+            traceroute -n example.com
+        3) Trace the route to a host with a specific maximum Time To Live (TTL):
+            traceroute -m 30 example.com
+        4) Trace the route to a host with a specific destination port:
+            traceroute -p 80 example.com
+        5) Trace the route to a host with a specific timeout for waiting for a reply:
+            traceroute -w 5 example.com
+        6) Trace the route to a host with a specific number of queries per hop:
+            traceroute -q 5 example.com
+        7) Trace the route to a host using ICMP Echo Request packets:
+            traceroute -I example.com
+        8) Trace the route to a host using TCP SYN packets:
+            traceroute -T example.com
+        9) Trace the route to a host using IPv4 only:
+            traceroute -4 example.com
+        10) Trace the route to a host using IPv6 only:
+            traceroute -6 example.com
+        11) Trace the route to a host with a specific maximum Time To Live (TTL) and numerical addresses:
+            traceroute -m 30 -n example.com
+        12) Trace the route to a host with a specific destination port and timeout:
+            traceroute -p 443 -w 3 example.com
+        13) Trace the route to a host with a specific number of queries per hop and using ICMP:
+            traceroute -q 2 -I example.com
+        14) Trace the route to a host with a specific number of queries per hop and using TCP:
+            traceroute -q 4 -T example.com
+        15) Trace the route to a host with a specific maximum Time To Live (TTL) and using TCP:
+            traceroute -m 20 -T example.com 
+        16) Trace the route to a host with a specific destination port and using ICMP:
+            traceroute -p 53 -I example.com 
+        17) Trace the route to a host with a specific timeout and using TCP:
+            traceroute -w 2 -T example.com  
+        18) Trace the route to a host with a specific maximum Time To Live (TTL), destination port, and using ICMP:
+            traceroute -m 10 -p 8080 -I example.com 
+        19) Trace the route to a host with a specific maximum Time To Live (TTL), destination port, and using TCP:
+            traceroute -m 15 -p 22 -T example.com   
+        20) Trace the route to a host with a specific maximum Time To Live (TTL), destination port, and using IPv6:
+            traceroute -m 25 -p 80 -6 example.com   
+    Note: ->The `traceroute` command is a valuable tool for diagnosing network issues, identifying routing problems, and understanding the path that packets take through the network.
+          ->It can help identify where delays or packet loss occur along the route to a destination host. However, some routers may block or limit ICMP packets, which can affect the accuracy of the results. In such cases, using TCP or UDP packets may yield better results.
+    6) About nslookup command:
+    The `nslookup` command is a network utility used to query Domain Name System (DNS) servers to obtain domain name or IP address mapping information. It can be used to perform DNS lookups, troubleshoot DNS issues, and retrieve various DNS records such as A, AAAA, CNAME, MX, and more.
+    ->Syntax:
+        nslookup [options] [domain] [server]
+    ->Common Options:
+        -type=<record_type> : Specify the type of DNS record to query (e.g, A, AAAA, CNAME, MX).
+        -debug : Enable debugging mode to display detailed information about the DNS query. 
+        -timeout=<seconds> : Set the timeout for waiting for a response from the DNS server.
+        -port=<port> : Specify the port number to use for the DNS query (default is 53).
+        -query=<domain> : Specify the domain to query.  
+        -server=<dns_server> : Specify the DNS server to use for the query.
+        -h, --help : Display help information and usage instructions.   
+    ->Examples:
+        1) Perform a basic DNS lookup for a domain (e.g., example.com): nslookup example.com    
+        2) Perform a DNS lookup for a specific record type (e.g., A record):
+            nslookup -type=A example.com    
+        3) Perform a DNS lookup for a specific record type (e.g., MX record):
+            nslookup -type=MX example.com
+        4) Perform a DNS lookup with debugging enabled:
+            nslookup -debug example.com 
+        5) Perform a DNS lookup with a specific timeout:
+            nslookup -timeout=5 example.com
+        6) Perform a DNS lookup with a specific port:
+            nslookup -port=5353 example.com
+        7) Perform a DNS lookup for a specific domain using a specific DNS server:
+            nslookup example.com 8.8.8.8        
+        8) Perform a DNS lookup for a specific record type using a specific DNS server:
+            nslookup -type=AAAA example.com 8.8.8.8 
+        9) Perform a DNS lookup for a specific record type with debugging enabled:
+            nslookup -type=CNAME -debug example.com 8.8.8.8 
+        10) Perform a DNS lookup for a specific record type with a specific timeout:
+            nslookup -type=TXT -timeout=3 example.com 8.8.8.8   
+        11) Perform a DNS lookup for a specific record type with a specific port:
+            nslookup -type=SRV -port=5353 example.com 8.8   .8.8
+        12) Perform a DNS lookup for a specific record type with a specific DNS server and debugging enabled:
+            nslookup -type=NS -debug example.com 8.8.8.8    
+        13) Perform a DNS lookup for a specific record type with a specific DNS server and timeout:
+            nslookup -type=PTR -timeout=2 example.com 8.8.8.8       
+        14) Perform a DNS lookup for a specific record type with a specific DNS server and port:
+            nslookup -type=SOA -port=5353 example.com 8.8.8.8   
+        15) Perform a DNS lookup for a specific record type with a specific DNS server, timeout, and debugging enabled:
+            nslookup -type=CAA -timeout=1 -debug example.com 8.8.8.8        
+        16) Perform a DNS lookup for a specific record type with a specific DNS server, timeout, and port:  
+            nslookup -type=NAPTR -timeout=2 -port=5353 example.com 8.8.8.8      
+        17) Perform a DNS lookup for a specific record type with a specific DNS server, timeout, port, and debugging enabled:
+            nslookup -type=ANY -timeout=1 -port=5353 -debug example 
+            nslookup -type=ANY -timeout=1 -port=5353 -debug example.com 
+        18) Perform a DNS lookup for a specific record type with a specific DNS server, timeout, port, and debugging enabled:
+            nslookup -type=DS -timeout=2 -port=5353 -debug example.com
+        19) Perform a DNS lookup for a specific record type with a specific DNS server, timeout, port, and debugging enabled:
+            nslookup -type=DNSKEY -timeout=3 -port=5353 -debug example.com
+        20) Perform a DNS lookup for a specific record type with a specific DNS server, timeout, port, and debugging enabled:
+            nslookup -type=TLSA -timeout=1 -port=5353 -debug example.com
+    Note: ->The `nslookup` command is a powerful tool for diagnosing DNS issues and retrieving DNS information. It can be used interactively or in batch mode.
+          ->However, it is worth noting that `nslookup` is considered deprecated in favor of the `dig` command, which provides more features and flexibility for DNS queries. The `dig` command is often preferred for advanced DNS troubleshooting and analysis.   ``` 
+          ->Additionally, the `dig` command provides more detailed output and supports a wider range of DNS record types compared to `nslookup`. It is recommended to use `dig` for any new DNS query scripts or tools. ``` 
+    7) About dig command:
+    The `dig` (Domain Information Groper) command is a powerful DNS lookup utility used to query DNS servers for information about domain names, IP addresses, and other DNS records. It provides detailed information about the DNS query process and is often used for troubleshooting DNS issues.
+    ->Syntax:
+        dig [options] [@server] [name] [type]
+    ->Common Options:
+        -t <type> : Specify the type of DNS record to query (e.g., A, AAAA, MX, etc.)
+        -x <ip_address> : Perform a reverse DNS lookup for the specified IP address.
+        -p <port> : Specify the port number to use for the DNS query (default is 53).
+        -q <query> : Specify the query to perform.
+        -c <class> : Specify the class of the DNS query (default is IN for Internet).
+        -n <name_server> : Specify the DNS server to use for the query. 
+        -4 : Use IPv4 only.
+        -6 : Use IPv6 only.
+    -D : Enable debugging mode to display detailed information about the DNS query.
+    -h, --help : Display help information and usage instructions.
+    ->Examples:
+        1) Perform a basic DNS lookup for a domain (e.g., example.com):
+            dig example.com
+        2) Perform a DNS lookup for a specific record type (e.g., A record):
+            dig -t A example.com
+        3) Perform a reverse DNS lookup for an IP address (e.g.,
+            dig -x 8.8.8.8  
+        4) Perform a DNS lookup with a specific DNS server (e.g.,
+            dig @8.8.8.8 example.com    
+        5) Perform a DNS lookup with a specific port:
+            dig -p 5353 example.com 
+        6) Perform a DNS lookup with a specific class (e.g., IN for Internet):
+            dig -c IN example.com
+        7) Perform a DNS lookup with a specific query:
+            dig -q example.com  
+        8) Perform a DNS lookup with a specific record type and DNS server:
+            dig -t MX @8.8.8.8 example.com  
+        9) Perform a DNS lookup with a specific record type and port:
+            dig -t TXT -p 5353 example.com  
+        10) Perform a DNS lookup with a specific record type and class:
+            dig -t CNAME -c IN example.com  
+        11) Perform a DNS lookup with a specific record type, DNS server, and debugging enabled:
+            dig -t NS @8.8.8.8 example.com -D   
+        12) Perform a DNS lookup with a specific record type, DNS server, and timeout:
+            dig -t SOA @8.8.8.8 example.com -T 5
+        13) Perform a DNS lookup with a specific record type, DNS server, and port:
+            dig -t AAAA @8.8.8.8 example.com -p 5353    
+        14) Perform a DNS lookup with a specific record type, DNS server, and class:
+            dig -t NAPTR @8.8.8.8 example.com -c IN
+        15) Perform a DNS lookup with a specific record type, DNS server, and debugging enabled:
+            dig -t DS @8.8.8.8 example.com -D   
+        16) Perform a DNS lookup with a specific record type, DNS server, and timeout:
+            dig -t DNSKEY @8.8.8.8 example.com -T 5 
+        17) Perform a DNS lookup with a specific record type, DNS server, and port:
+            dig -t TLSA @8.8.8.8 example.com -p 5353    
+        18) Perform a DNS lookup with a specific record type, DNS server, and class:
+            dig -t CAA @8.8.8.8 example.com -c IN   
+        19) Perform a DNS lookup with a specific record type, DNS server, and debugging enabled:
+            dig -t ANY @8.8.8.8 example.com -D  
+        20) Perform a DNS lookup with a specific record type, DNS server, and timeout:
+            dig -t NSEC3 @8.8.8.8 example.com -T 5
+    Note: ->The `dig` command is a powerful and flexible tool for DNS queries and is widely used by system administrators, network engineers, and security professionals for troubleshooting and analyzing DNS issues.
+          ->It provides detailed output, including the query time, server used, and additional information about the DNS records returned. The `dig` command is often preferred over `nslookup` for advanced DNS troubleshooting and analysis due to its extensive features and capabilities.   ``` 
+          ->Additionally, the `dig` command supports a wide range of DNS record types and options, making it suitable for various DNS-related tasks. It is recommended to use `dig` for any new DNS query scripts or tools. ```   
+    8) About route command:
+    The `route` command is used to view and manipulate the IP routing table in Linux and other Unix-like operating systems. It allows you to display the current routing table, add new routes, delete existing routes, and modify routing parameters.
+    ->Syntax:
+        route [options] [command] [destination] [gateway] [netmask] [metric]    
+    ->Common Options:
+        -n : Show numerical addresses instead of resolving hostnames.
+        -v : Verbose output, showing more details about the routing table.
+        -A <address_family> : Specify the address family (e.g., inet for IPv4, inet6 for IPv6).
+        -F : Flush the routing table.
+        -C : Clear the routing cache.
+        -h, --help : Display help information and usage instructions.
+    ->Examples:
+        1) Display the current routing table:   route -n    
+        2) Display the routing table with verbose output:
+            route -v
+        3) Display the routing table for a specific address family (e.g., IPv4):
+            route -A inet
+        4) Display the routing table for a specific address family (e.g., IPv6):
+            route -A inet6
+        5) Add a new route to a destination network:
+            route add -net <destination_network> netmask <netmask> gw <gateway> metric <metric> 
+        6) Add a new route to a specific host:
+            route add -host <destination_host> gw <gateway> metric <metric> 
+        7) Delete an existing route to a destination network:
+            route del -net <destination_network> netmask <netmask> gw <gateway> metric <metric> 
+        8) Delete an existing route to a specific host:
+            route del -host <destination_host> gw <gateway> metric <metric> 
+        9) Modify an existing route to a destination network:
+            route change -net <destination_network> netmask <netmask> gw <gateway> metric <metric>
+        10) Modify an existing route to a specific host:
+            route change -host <destination_host> gw <gateway> metric <metric>      
+        11) Flush the routing table:
+            route -F    
+        12) Clear the routing cache:
+            route -C
+        13) Display the routing table with numerical addresses:
+            route -n
+            route -n        
+        14) Display the routing table with verbose output and numerical addresses:
+            route -vn
+            route -vn   
+        15) Display the routing table for a specific address family (e.g., IPv4) with numerical addresses:
+            route -A inet -n
+        16) Display the routing table for a specific address family (e.g., IPv6) with numerical addresses:
+            route -A inet6 -n   
+        17) Add a new route to a destination network with a specific metric:
+            route add -net <destination_network> netmask <netmask> gw <gateway> metric <metric>
+        18) Add a new route to a specific host with a specific metric:
+            route add -host <destination_host> gw <gateway> metric <metric>     
+        19) Delete an existing route to a destination network with a specific metric:
+            route del -net <destination_network> netmask <netmask> gw <gateway> metric <metric>
+        20) Delete an existing route to a specific host with a specific metric:
+            route del -host <destination_host> gw <gateway> metric <metric>     
+    Note: ->The `route` command is a powerful tool for managing the IP routing table and is commonly used by system administrators and network engineers to configure and troubleshoot network routing.
+          ->However, it is worth noting that the `route` command is considered deprecated in favor of the `ip route` command, which provides more features and flexibility for managing routing in modern Linux systems.
+          ->The `ip route` command is part of the `iproute2` package and is the recommended way to manage routing in Linux. It provides a more consistent syntax and additional features compared to the `route` command.
+          ->For example, you can use `ip route show` to display the routing table, and `ip route add` to add new routes.
+    9) About arp command:
+    The `arp` command is used to view and manipulate the Address Resolution Protocol (ARP) cache, which maps IP addresses to MAC addresses on a local network. It allows you to display the current ARP cache, add or delete ARP entries, and perform other ARP-related tasks.
+    ->Syntax:
+        arp [options] [hostname]    
+    ->Common Options:
+        -a : Display the current ARP cache. 
+        -d <hostname> : Delete an ARP entry for the specified hostname or IP address.
+        -s <hostname> <hw_address> : Add a static ARP entry for the specified hostname or IP address with the given hardware (MAC) address.
+        -n : Show numerical addresses instead of resolving hostnames.
+        -v : Verbose output, showing more details about the ARP cache.
+        -h, --help : Display help information and usage instructions.   
+    ->Examples:
+        1) Display the current ARP cache:
+            arp -a
+        2) Display the ARP cache with numerical addresses:
+            arp -an 
+        3) Display the ARP cache with verbose output:
+            arp -av 
+        4) Delete an ARP entry for a specific hostname or IP address:
+            arp -d <hostname_or_ip> 
+        5) Add a static ARP entry for a specific hostname or IP address with a given hardware (MAC) address:
+            arp -s <hostname_or_ip> <hw_address>    
+        6) Display the ARP cache for a specific hostname or IP address:
+            arp <hostname_or_ip>    
+        7) Display the ARP cache for a specific hostname or IP address with numerical addresses:    
+            arp -n <hostname_or_ip> 
+        8) Display the ARP cache for a specific hostname or IP address with verbose output:
+            arp -v <hostname_or_ip> 
+            arp -v <hostname_or_ip> <hw_address>    
+        9) Delete an ARP entry for a specific hostname or IP address with verbose output:
+            arp -d <hostname_or_ip> -v      
+        10) Add a static ARP entry for a specific hostname or IP address with a given hardware (MAC) address and verbose output:
+            arp -s <hostname_or_ip> <hw_address> -v 
+        11) Display the ARP cache for a specific hostname or IP address with verbose output and numerical addresses:
+            arp -vn <hostname_or_ip>    
+        12) Delete an ARP entry for a specific hostname or IP address with verbose output and numerical addresses:
+            arp -d <hostname_or_ip> -vn 
+        13) Add a static ARP entry for a specific hostname or IP address with a given hardware (MAC) address and verbose output and numerical addresses:
+            arp -s <hostname_or_ip> <hw_address> -vn    
+        14) Display the ARP cache for a specific hostname or IP address with verbose output, numerical addresses, and a specific hardware (MAC) address:        
+            arp -v -n <hostname_or_ip> <hw_address> 
+            arp -v -n <hostname_or_ip> <hw_address> -v  
+        15) Delete an ARP entry for a specific hostname or IP address with verbose output, numerical addresses, and a specific hardware (MAC) address:
+            arp -d <hostname_or_ip> <hw_address> -vn    
+        16) Add a static ARP entry for a specific hostname or IP address with a given hardware (MAC) address and verbose output, numerical addresses, and a specific hardware (MAC) address:
+            arp -s <hostname_or_ip> <hw_address> -vn    
+        17) Display the ARP cache for a specific hostname or IP address with verbose output, numerical addresses, and a specific hardware (MAC) address:
+            arp -v -n <hostname_or_ip> <hw_address>
+            arp -v -n <hostname_or_ip> <hw_address> -v  
+            arp -v -n <hostname_or_ip> <hw_address> -vn 
+        18) Delete an ARP entry for a specific hostname or IP address with verbose output, numerical addresses, and a specific hardware (MAC) address:
+            arp -d <hostname_or_ip> <hw_address> -vn    
+            arp -d <hostname_or_ip> <hw_address> -vn -v 
+        19) Add a static ARP entry for a specific hostname or IP address with a given hardware (MAC) address and verbose output, numerical addresses, and a specific hardware (MAC) address:
+            arp -s <hostname_or_ip> <hw_address> -vn
+            arp -s <hostname_or_ip> <hw_address> -vn -v
+        20) Display the ARP cache for a specific hostname or IP address with verbose output, numerical addresses, and a specific hardware (MAC) address:
+            arp -v -n <hostname_or_ip> <hw_address> -vn
+            arp -v -n <hostname_or_ip> <hw_address> -vn -v
+            arp -v -n <hostname_or_ip> <hw_address> -vn -v -v
+            arp -v -n <hostname_or_ip> <hw_address> -vn -v -v -v
+    Note: ->The `arp` command is a useful tool for managing the ARP cache and is commonly used by system administrators and network engineers to troubleshoot network connectivity issues.
+          ->However, it is worth noting that the `arp` command is considered deprecated in favor of the `ip neigh` command in modern Linux distributions.   
+            ->The `ip neigh` command provides more features and flexibility for managing ARP entries and is part of the `iproute2` package, which is the recommended way to manage network interfaces and routing in Linux.     
+    10) About tcpdump command:
+    The `tcpdump` command is a powerful command-line packet analyzer used to capture and display network traffic. It allows users to intercept and log packets being transmitted or received over a network to which the computer is attached. `tcpdump` is commonly used for network troubleshooting, analysis, and security monitoring.   
+    ->Syntax:
+        tcpdump [options] [expression]
+    ->Common Options:
+        -i <interface> : Specify the network interface to capture packets from (e.g., eth0).
+        -n : Show numerical addresses instead of resolving hostnames.   
+        -v : Verbose output, showing more details about the captured packets.
+        -c <count> : Stop capturing after receiving <count> packets.
+        -w <file> : Write the captured packets to a file instead of displaying them on the console.
+        -r <file> : Read packets from a file instead of capturing them live.
+        -s <snaplen> : Set the snapshot length, which determines how much of each packet to capture (default is 65535 bytes).
+        -p : Do not put the interface into promiscuous mode, which captures all packets on the network.
+        -e : Display the link-layer header information.
+        -t : Do not print the timestamp for each packet.
+        -T <type> : Specify the type of packet to capture (e.g., tcp, udp, icmp).
+        -D : List all available network interfaces.
+        -h : Display help information and exit. 
+    ->Examples:
+        1) Capture packets on a specific interface (e.g., eth0):
+            tcpdump -i eth0 
+        2) Capture packets on a specific interface with numerical addresses:
+            tcpdump -i eth0 -n
+            tcpdump -i eth0 -n -v
+        3) Capture a specific number of packets (e.g., 10):
+            tcpdump -i eth0 -c 10
+        4) Capture packets and write them to a file (e.g., capture.pcap):
+            tcpdump -i eth0 -w capture.pcap 
+        5) Read packets from a file (e.g., capture.pcap):
+            tcpdump -r capture.pcap 
+        6) Capture packets with a specific snapshot length (e.g., 128 bytes):
+            tcpdump -i eth0 -s 128  
+        7) Capture packets without putting the interface into promiscuous mode:
+            tcpdump -i eth0 -p  
+        8) Capture packets and display link-layer header information:
+            tcpdump -i eth0 -e
+            tcpdump -i eth0 -e -v
+            tcpdump -i eth0 -e -v -v
+            tcpdump -i eth0 -e -v -v -v
+            tcpdump -i eth0 -e -v -v -v -v
+            tcpdump -i eth0 -e -v -v -v -v -v
+        9) Capture packets without printing timestamps:
+            tcpdump -i eth0 -t
+        10) Capture TCP packets:
+            tcpdump -i eth0 -T tcp  
+        11) Capture UDP packets:
+            tcpdump -i eth0 -T udp  
+        12) Capture ICMP packets:
+            tcpdump -i eth0 -T icmp 
+        13) List all available network interfaces:
+            tcpdump -D  
+        14) Display help information and exit:
+            tcpdump -h  
+        15) Capture packets on a specific interface with verbose output:
+            tcpdump -i eth0 -v  
+            tcpdump -i eth0 -v -v   
+            tcpdump -i eth0 -v -v -v
+        16) Capture packets on a specific interface with verbose output and numerical addresses:
+            tcpdump -i eth0 -v -n       
+            tcpdump -i eth0 -v -n -v
+            tcpdump -i eth0 -v -n -v -v
+            tcpdump -i eth0 -v -n -v -v -v  
+        17) Capture packets on a specific interface with verbose output, numerical addresses, and a specific snapshot length:
+            tcpdump -i eth0 -v -n -s 128
+            tcpdump -i eth0 -v -n -s 128 -w capture.pcap
+            tcpdump -i eth0 -v -n -s 128 -c 10
+        18) Capture packets on a specific interface with verbose output, numerical addresses, and a specific type of packet (e.g., TCP):
+            tcpdump -i eth0 -v -n -T tcp
+            tcpdump -i eth0 -v -n -T udp
+            tcpdump -i eth0 -v -n -T icmp   
+        19) Capture packets on a specific interface with verbose output, numerical addresses, and a specific type of packet (e.g., TCP) and write them to a file:
+            tcpdump -i eth0 -v -n -T tcp -w capture_tcp.pcap
+            tcpdump -i eth0 -v -n -T udp -w capture_udp.pcap
+            tcpdump -i eth0 -v -n -T icmp -w capture_icmp.pcap
+        20) Capture packets on a specific interface with verbose output, numerical addresses, and a specific type of packet (e.g., TCP) and a specific snapshot length:
+            tcpdump -i eth0 -v -n -T tcp -s 128 -w capture_tcp.pcap 
+            tcpdump -i eth0 -v -n -T udp -s 128 -w capture_udp.pcap
+            tcpdump -i eth0 -v -n -T icmp -s 128 -w capture_icmp.pcap
+    Note: ->The `tcpdump` command is a powerful tool for network analysis and troubleshooting, allowing users to capture and analyze network traffic in real-time or from saved files.
+          ->It is widely used by network administrators, security professionals, and developers to diagnose network issues, monitor network performance, and analyze security incidents.
+          ->However, it is important to use `tcpdump` responsibly and ensure that you have permission to capture network traffic, as capturing packets without authorization may violate privacy and security policies. 
+          ->Additionally, `tcpdump` can generate a large amount of output, so it is often used with filters to capture only relevant traffic. Filters can be specified using expressions to match specific protocols, ports, IP addresses, or other criteria.   
+    11) About SSH command and configuration:
+    The `ssh` (Secure Shell) command is a protocol and command-line utility used to securely connect to remote systems over a network. It provides a secure channel for remote login, command execution, and file transfer, ensuring confidentiality and integrity of the data transmitted between the client and server.
+    ->Syntax:
+        ssh [options] [user@]hostname [command]
+    ->Common Options:
+        -p <port> : Specify the port number to connect to on the remote host (default is 22).
+        -i <identity_file> : Specify the private key file to use for authentication.
+        -v : Enable verbose mode, providing detailed information about the connection process.
+        -X : Enable X11 forwarding, allowing graphical applications to be displayed on the local machine.
+        -C : Enable compression, which can improve performance over slow connections.
+        -o <option> : Specify additional SSH options (e.g., `-o StrictHostKeyChecking=no` to disable host key checking).
+        -l <user> : Specify the username to use for the SSH connection.
+        -L <local_port>:<remote_host>:<remote_port> : Set up local port forwarding.
+        -R <remote_port>:<local_host>:<local_port> : Set up remote port forwarding.
+        -D <local_port> : Set up a SOCKS proxy on the specified local port.
+        -N : Do not execute any commands on the remote host, useful for port forwarding.
+        -f : Run SSH in the background (useful for port forwarding).
+        -q : Quiet mode, suppressing most warning and diagnostic messages.
+        -h, --help : Display help information and usage instructions.
+        -K : Enable Kerberos authentication.
+        -A : Enable authentication agent forwarding.
+        -T : Disable pseudo-terminal allocation.
+    ->Examples:
+        1) Connect to a remote host (e.g., example.com) as a specific user (e.g., user):
+            ssh user@example.com
+            # Once connected, you can execute commands on the remote host.
+            ls -l
+            pwd
+            exit
+        2) Connect to a remote host on a specific port (e.g., port 2222):
+            ssh -p 2222 user@example.com    
+        3) Connect to a remote host using a specific private key file (e.g., id_rsa):
+            ssh -i /path/to/id_rsa user@example.com 
+        4) Connect to a remote host with verbose output:
+            ssh -v user@example.com     
+        5) Connect to a remote host with X11 forwarding enabled:
+            ssh -X user@example.com 
+    12) About ss command:
+    The `ss` command is a utility used to investigate sockets and network connections in Linux. It provides detailed information about established connections, listening sockets, and network statistics, making it a powerful tool for network troubleshooting and analysis.  
+    ->Syntax:
+        ss [options] [filter]   
+    ->Common Options:
+        -t : Display TCP sockets.
+        -u : Display UDP sockets.
+        -l : Display listening sockets.
+        -p : Show process using the socket.
+        -n : Show numerical addresses instead of resolving hostnames.
+        -r : Show raw sockets.
+        -s : Display summary statistics.
+        -h : Display help information.
+        -V : Display version information.
+        -a : Display all sockets (both listening and non-listening).
+        -i : Display internal TCP information.
+        -m : Display memory usage statistics.
+        -q : Quiet mode, suppressing most warning and diagnostic messages.
+        -h, --help : Display help information and usage instructions.
+    ->Examples:
+        1) Display all TCP sockets:
+            ss -t
+        2) Display all UDP sockets:
+            ss -u
+        3) Display all listening sockets:
+            ss -l
+            ss -ltn 
+        4) Display all sockets with process information:
+            ss -p   
+        5) Display all sockets with numerical addresses:
+            ss -n
+        6) Display all raw sockets:
+            ss -r
+            ss -rtn 
+            ss -rtnp    
+        7) Display summary statistics:
+            ss -s
+            ss -s -t
+            ss -s -u    
+        8) Display version information:
+            ss -V
+            ss -V   
+        9) Display all sockets (both listening and non-listening):
+            ss -a       
+        10) Display internal TCP information:
+            ss -i
+            ss -it
+            ss -iu
+            ss -im
+            ss -i
+            ss -iu
+            ss -im  
+        11) Display memory usage statistics:
+            ss -m
+            ss -m -t
+            ss -m -u
+            ss -m -i
+            ss -m -im
+        12) Display all sockets with quiet mode:
+            ss -q   
+        13) Display all TCP sockets with process information:
+            ss -tp
+            ss -t -p
+            ss -t -p
+        14) Display all UDP sockets with process information:
+            ss -up
+            ss -u -p
+        15) Display all listening sockets with process information:
+
+            ss -lp
+            ss -l -p    
+        16) Display all sockets with numerical addresses and process information:
+            ss -np
+            ss -n -p    
+        17) Display all raw sockets with process information:
+            ss -rp
+            ss -r -p   
+        18) Display all sockets with summary statistics:
+            ss -s -p
+            ss -s -t -p
+            ss -s -u -p
+            ss -s -r -p
+        19) Display all sockets with version information:
+            ss -V -p
+            ss -V -p    
+        20) Display all sockets with help information:
+            ss -h
+            ss -h -p
+    Note: ->The `ss` command is a powerful tool for investigating sockets and network connections in Linux, providing detailed information about established connections, listening sockets, and network statistics.
+          ->It is often used by system administrators, network engineers, and security professionals for troubleshooting network issues and monitoring system performance.  
+          ->The `ss` command is considered a replacement for the older `netstat` command, providing more features and better performance for socket analysis. 
+          ->It is recommended to use `ss` for any new socket analysis scripts or tools, as it is more efficient and provides more detailed information compared to `netstat`.
