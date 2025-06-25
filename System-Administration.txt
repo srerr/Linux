@@ -77,7 +77,136 @@ commands:
 ->passwd {username} //to set password for new user
 
 
+# Process Management and Monitoring and commands with syntax:
+-------------------------------------------------------------
+ ->Process: A process is a program in execution. It is an active entity, with a program counter specifying the next instruction to execute and a set of associated resources.
+ ->Process ID (PID): A unique identifier assigned to each process running on the system.
+ ->Parent Process ID (PPID): The identifier of the parent process that created the current process.
+ ->Zombie Process: A process that has completed execution but still has an entry in the process table, allowing the parent process to read its exit status.
+ ->Orphan Process: A process whose parent has terminated, leaving it without a controlling parent.	
+ ->Daemon Process: A background process that runs continuously, often starting at system boot, and performs specific tasks without user interaction.
+ ->Foreground Process: A process that is currently running and interacting with the user in the terminal.	
+ ->Background Process: A process that runs without user interaction, allowing the user to continue using the terminal for other tasks.
+ ->Process State: The current status of a process, such as running, sleeping, stopped, or zombie.	
+ ->Process Scheduling: The method by which the operating system decides which process to run at any given time, based on priority and other factors.	
+ ->Process Priority: A value that determines the order in which processes are scheduled for execution. Higher priority processes are executed before lower priority ones.	
+ ->Process Control Block (PCB): A data structure used by the operating system to store information about a process, including its state, PID, memory usage, and scheduling information.	
+# Linux all process commands with syntax and description and examples:
+----------------------------------------------------------------------
+1. ps: Display information about active processes.
+   Syntax: ps [options]
+   Example: ps aux
 
+2. top: Display real-time information about system processes.
+   Syntax: top [options]
+   Example: top -u username
 
+3. htop: An interactive process viewer (requires installation).
+   Syntax: htop
+   Example: htop
 
+4. kill: Terminate a process by its PID.
+   Syntax: kill [options] <PID>
+   Example: kill -9 1234
 
+5. pkill: Terminate processes by name.
+   Syntax: pkill [options] <process_name>
+   Example: pkill -f python
+
+6. nice: Start a process with a modified scheduling priority.
+   Syntax: nice [options] <command>
+   Example: nice -n 10 ./my_script.sh
+
+7. renice: Change the priority of an existing process.
+   Syntax: renice [options] <new_priority> <PID>
+   Example: renice -n 5 1234
+
+8. bg: Resume a suspended process in the background.
+   Syntax: bg [job_id]
+   Example: bg %1
+
+9. fg: Bring a background process to the foreground.
+   Syntax: fg [job_id]
+   Example: fg %1
+
+10. jobs: List all background and suspended jobs.
+    Syntax: jobs [options]
+    Example: jobs -l
+11. pgrep: Search for processes by name.
+	Syntax: pgrep [options] <process_name>	
+	Example: pgrep -l python	
+12. pstree: Display processes in a tree-like format.
+	Syntax: pstree [options]
+	Example: pstree -p	
+13. strace: Trace system calls and signals of a process.
+	Syntax: strace [options] <command>
+	Example: strace -p 1234	
+14. lsof: List open files and the processes that opened them.
+	Syntax: lsof [options]
+	Example: lsof -p 1234	
+15. systemctl: Manage system services and processes.
+	Syntax: systemctl [options] <command>
+	Example: systemctl status apache2	
+16. service: Manage system services (older systems).
+	Syntax: service <service_name> <command>
+	Example: service apache2 status	
+17. nohup: Run a command immune to hangups, with output to a non-tty.
+	Syntax: nohup <command> [options] &
+	Example: nohup ./my_script.sh &	
+18. disown: Remove a job from the shell's job table.
+	Syntax: disown [job_id]
+	Example: disown %1
+19. watch: Execute a command periodically and display the output.
+	Syntax: watch [options] <command>
+	Example: watch -n 5 ls -l	
+20. timeout: Run a command with a time limit.
+	Syntax: timeout [options] <duration> <command>
+	Example: timeout 5s ./my_script.sh	
+21. pmap: Display memory map of a process.
+	Syntax: pmap [options] <PID>	
+	Example: pmap 1234
+22. free: Display memory usage information.
+	Syntax: free [options]
+	Example: free -h
+23. vmstat: Report virtual memory statistics.
+	Syntax: vmstat [options]
+	Example: vmstat 1	
+24. iostat: Report CPU and I/O statistics.
+	Syntax: iostat [options]
+	Example: iostat -x 1	
+25. mpstat: Report CPU usage statistics.
+	Syntax: mpstat [options]
+	Example: mpstat -P ALL 1	
+26. pidof: Find the process ID of a running program.
+	Syntax: pidof [options] <program_name>
+	Example: pidof bash	
+27. uptime: Show how long the system has been running.
+	Syntax: uptime
+	Example: uptime	
+28. sysctl: Configure kernel parameters at runtime.
+	Syntax: sysctl [options] <parameter>
+	Example: sysctl -w vm.swappiness=10	
+29. dmesg: Print or control the kernel ring buffer.
+	Syntax: dmesg [options]
+	Example: dmesg -T	
+30. journalctl: Query the systemd journal for logs.
+	Syntax: journalctl [options]
+	Example: journalctl -u apache2
+31. pidstat: Report statistics by process or thread.
+	Syntax: pidstat [options] [interval] [count]
+	Example: pidstat -r 1 5
+32. pstack: Print a stack trace of a process.
+	Syntax: pstack <PID>
+	Example: pstack 1234	
+33. pselect: Wait for events on file descriptors.
+	Syntax: pselect [options] <timeout> <fd_set>
+	Example: pselect 5 0 0 0 0
+34. fuser: Identify processes using files or sockets.
+	Syntax: fuser [options] <file>
+	Example: fuser -m /mnt/my_mount	
+35. lsof: List open files and the processes that opened them.
+	Syntax: lsof [options] [file]
+	Example: lsof -p 1234	
+36. pgrep: Search for processes by name.
+	Syntax: pgrep [options] <process_name>
+	Example: pgrep -l python
