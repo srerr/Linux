@@ -1,0 +1,5 @@
+#list of shells available in the system:
+cat /etc/shells
+
+=>what is shell scripting?
+    ->Shell scripting is a way to automate tasks in a Unix/Linux environment by writing scripts that can execute commands in a shell. It allows users to combine multiple commands into a single script file, which can be executed to perform complex tasks.    
